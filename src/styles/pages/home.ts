@@ -17,6 +17,7 @@ export const Product = styled(Link, {
   cursor: 'pointer',
   position: 'relative',
   overflow: 'hidden',
+
   
 
   display: 'flex',
@@ -32,7 +33,7 @@ export const Product = styled(Link, {
     bottom: '0.25rem',
     left: '0.25rem',
     right: '0.25rem',
-    padding: '2rem',
+    padding: '2rem', 
 
     borderRadius: 6,
 
@@ -46,8 +47,13 @@ export const Product = styled(Link, {
     opacity: 0,
     transition: 'all 0.2s',
 
-    strong: {
-      fontSize: '$lg',
+    section: {
+      display: 'flex',
+      flexDirection: 'column',
+      gap: 4,
+
+      strong: {
+      fontSize: '$md',
       color: '$gray100'
     },
 
@@ -55,8 +61,22 @@ export const Product = styled(Link, {
       fontSize: '$xl',
       fontWeight: 'bold',
       color: '$green300'
+    }
     },
 
+    div: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: 6,
+
+
+      padding: '0.75rem', 
+      backgroundColor: '$green500',
+      color: '$white'
+
+      
+    }
   },
 
   '&:hover': {
