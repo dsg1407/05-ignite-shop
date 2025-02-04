@@ -1,12 +1,13 @@
 import { createContext, useEffect, useState } from 'react'
 
 export interface CartItem {
+  id: string
   product: {
     id: string
     name: string
     imageUrl: string
     defaultPriceId: string
-    price: string
+    price: number
     description: string
   }
 }
@@ -32,7 +33,7 @@ export function CartContextProvider({ children }: CartContextProviderProps) {
   }
 
   function removeItem(id: string) {
-    const newList = itensList.filter((item) => item.product.id !== id)
+    const newList = itensList.filter((item) => item.id !== id)
     setItensList(newList)
 
     const stateJSON = JSON.stringify(newList)

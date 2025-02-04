@@ -1,48 +1,31 @@
+import { CartContext, CartItem } from '@/contexts/cart-context'
 import { stripe } from '@/lib/stripe'
 import {
   ImageContainer,
   ProductContainer,
   ProductDetails,
 } from '@/styles/pages/product'
-import axios from 'axios'
 import { GetStaticPaths, GetStaticProps } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
 import { useRouter } from 'next/router'
-import { useState } from 'react'
+import { useContext } from 'react'
 import Stripe from 'stripe'
+import * as uuid from 'uuid'
 
-interface ProductProps {
-  product: {
-    id: string
-    name: string
-    imageUrl: string
-    defaultPriceId: string
-    price: string
-    description: string
-  }
-}
+interface ProductProps extends CartItem {}
 
 export default function Product({ product }: ProductProps) {
-  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
-    useState(false)
-
-  const { isFallback } = useRouter()
+  const { isFallback, back } = useRouter()
+  const { addNewItem } = useContext(CartContext)
 
   async function handleBuyProduct() {
-    try {
-      setIsCreatingCheckoutSession(true)
-      const response = await axios.post('/api/checkout', {
-        priceId: product.defaultPriceId,
-      })
-
-      const { checkoutUrl } = response.data
-
-      window.location.href = checkoutUrl
-    } catch (error) {
-      setIsCreatingCheckoutSession(false)
-      alert('Falha ao redirecionar ao checkout!')
-    }
+    const newProduct = product
+    addNewItem({
+      id: uuid.v4(),
+      product: newProduct,
+    })
+    back()
   }
 
   if (isFallback) {
@@ -62,16 +45,16 @@ export default function Product({ product }: ProductProps) {
 
         <ProductDetails>
           <h1>{product.name}</h1>
-          <span>{product.price}</span>
+          <span>
+            {(product.price / 100).toLocaleString('pt-BR', {
+              style: 'currency',
+              currency: 'BRL',
+            })}
+          </span>
 
           <p>{product.description}</p>
 
-          <button
-            onClick={handleBuyProduct}
-            disabled={isCreatingCheckoutSession}
-          >
-            Comprar agora
-          </button>
+          <button onClick={handleBuyProduct}>Comprar agora</button>
         </ProductDetails>
       </ProductContainer>
     </>
@@ -103,13 +86,7 @@ export const getStaticProps: GetStaticProps<any, { id: string }> = async ({
         name: product.name,
         imageUrl: product.images[0],
         defaultPriceId: price.id,
-        price: (price.unit_amount ? price.unit_amount / 100 : 0).toLocaleString(
-          'pt-BR',
-          {
-            style: 'currency',
-            currency: 'BRL',
-          }
-        ),
+        price: price.unit_amount ? price.unit_amount : 0,
         description: product.description,
       },
     },
