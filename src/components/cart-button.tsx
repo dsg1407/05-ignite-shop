@@ -13,32 +13,55 @@ import { Handbag, X } from 'phosphor-react'
 import { useContext, useState } from 'react'
 
 import { CartContext } from '@/contexts/cart-context'
+import axios from 'axios'
 
 export function CartButton() {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isCreatingCheckoutSession, setIsCreatingCheckoutSession] =
+    useState(false)
+  useState(false)
 
-  const { itensList, removeItem, removeAllItens } = useContext(CartContext)
+  const { itensList, removeItem } = useContext(CartContext)
 
   const cartTotalPrice = itensList.reduce(
     (acc, item) => acc + item.product.price,
     0
   )
 
-  // async function handleBuyProduct() {
-  //   try {
-  //     setIsCreatingCheckoutSession(true)
-  //     const response = await axios.post('/api/checkout', {
-  //       priceId: product.defaultPriceId,
-  //     })
+  async function handleBuyProduct() {
+    try {
+      setIsCreatingCheckoutSession(true)
 
-  //     const { checkoutUrl } = response.data
+      const itensSession = itensList.map((item) => {
+        return {
+          price: item.product.defaultPriceId,
+          quantity: 1,
+        }
+      })
 
-  //     window.location.href = checkoutUrl
-  //   } catch (error) {
-  //     setIsCreatingCheckoutSession(false)
-  //     alert('Falha ao redirecionar ao checkout!')
-  //   }
-  // }
+      const groupedItensSession = itensSession.reduce((acc, item) => {
+        const existingItem = acc.find((i) => i.price === item.price)
+        if (existingItem) {
+          existingItem.quantity += item.quantity
+        } else {
+          acc.push({ ...item })
+        }
+        return acc
+      }, [])
+
+      const response = await axios.post('/api/checkout', {
+        groupedItensSession,
+      })
+
+      const { checkoutUrl } = response.data
+
+      window.location.href = checkoutUrl
+    } catch (error) {
+      alert('Falha ao redirecionar ao checkout!')
+    } finally {
+      setIsCreatingCheckoutSession(false)
+    }
+  }
 
   return (
     <>
@@ -111,7 +134,11 @@ export function CartButton() {
               </span>
             </CartResumeRow>
 
-            <CheckoutButton type="button" disabled={itensList.length === 0}>
+            <CheckoutButton
+              type="button"
+              disabled={itensList.length === 0 || isCreatingCheckoutSession}
+              onClick={handleBuyProduct}
+            >
               Finalizar compra
             </CheckoutButton>
           </ModalContainer>

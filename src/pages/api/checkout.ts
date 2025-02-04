@@ -1,15 +1,27 @@
-import { stripe } from "@/lib/stripe";
-import { NextApiRequest, NextApiResponse } from "next";
+import { stripe } from '@/lib/stripe'
+import { NextApiRequest, NextApiResponse } from 'next'
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
-  const { priceId } = req.body
+type SessionProps = {
+  price: string
+  quantity: number
+}
 
-  if(req.method !==  'POST'){
-    return res.status(405).json({error: 'Method not allowed.'})
+interface BodyProps {
+  groupedItensSession: SessionProps[]
+}
+
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  const { groupedItensSession } = req.body as BodyProps
+
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method not allowed.' })
   }
 
-  if(!priceId) {
-    return res.status(400).json({error: 'Price not found.'})
+  if (!groupedItensSession) {
+    return res.status(400).json({ error: 'Invalid request.' })
   }
 
   const successUrl = `${process.env.NEXT_URL}/success?session_id={CHECKOUT_SESSION_ID}`
@@ -19,15 +31,10 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     success_url: successUrl,
     cancel_url: cancelUrl,
     mode: 'payment',
-    line_items: [
-      {
-        price: priceId,
-        quantity: 1
-      }
-    ]
+    line_items: groupedItensSession,
   })
 
   return res.status(201).json({
-    checkoutUrl: checkoutSession.url
+    checkoutUrl: checkoutSession.url,
   })
 }
