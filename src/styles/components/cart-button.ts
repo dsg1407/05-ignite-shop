@@ -59,7 +59,9 @@ export const ModalContainer = styled('aside', {
   zIndex: 2,
 
   minHeight: '100vh',
+  maxHeight: '100vh',
   width: 480,
+  overflow: 'hidden',
   padding: '24px 48px 48px',
 
   backgroundColor: '$gray800',
@@ -120,6 +122,13 @@ export const CartList = styled('session', {
   gap: 24,
 
   flex: 1,
+  maxHeight: 'calc(100vh - 380px)',
+  overflowY: 'auto',
+
+  span: {
+    fontSize: '1rem',
+    color: '$gray500',
+  },
 })
 
 export const CartListItem = styled('div', {
@@ -202,6 +211,11 @@ export const CheckoutButton = styled('button', {
   transition: 'all 0.2s',
 
   '&:hover': {
+    opacity: 0.8,
+  },
+
+  '&:disabled': {
+    cursor: 'not-allowed',
     opacity: 0.8,
   },
 })
