@@ -6,6 +6,7 @@ import logoImg from '../assets/logo.svg'
 import { Container, Header } from '@/styles/pages/app'
 import Image from 'next/image'
 import { CartButton } from '@/components/cart-button'
+import { CartContextProvider } from '@/contexts/cart-context'
 
 const roboto = Roboto({
   weight: ['400', '700'],
@@ -23,12 +24,14 @@ export default function App({ Component, pageProps }: AppProps) {
         }
       `}</style>
 
-      <Header>
-        <Image src={logoImg} alt="" />
-        <CartButton />
-      </Header>
+      <CartContextProvider>
+        <Header>
+          <Image src={logoImg} alt="" />
+          <CartButton />
+        </Header>
 
-      <Component {...pageProps} />
+        <Component {...pageProps} />
+      </CartContextProvider>
     </Container>
   )
 }
