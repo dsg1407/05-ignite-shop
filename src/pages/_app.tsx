@@ -5,6 +5,7 @@ import { Roboto } from 'next/font/google'
 import logoImg from '../assets/logo.svg'
 import { Container, Header } from '@/styles/pages/app'
 import Image from 'next/image'
+import { CartButton } from '@/components/cart-button'
 
 const roboto = Roboto({
   weight: ['400', '700'],
@@ -24,7 +25,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
       <Header>
         <Image src={logoImg} alt="" />
-        <button type="button">aqui</button>
+        <CartButton />
       </Header>
 
       <Component {...pageProps} />
