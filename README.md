@@ -18,7 +18,7 @@
 <br>
 
 <p align="center">
-  <img alt="App Screen" src="./src/assets/Cover.png" width="100%">
+  <img alt="App Screen" src="./src/assets/cover.png" width="100%">
 </p>
 
 ## 🚀 Technologies
