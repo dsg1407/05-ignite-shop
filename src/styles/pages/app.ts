@@ -17,4 +17,12 @@ export const Header = styled('header', {
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'space-between',
+
+  variants: {
+    isSuccessPage: {
+      true: {
+        justifyContent: 'center',
+      },
+    },
+  },
 })

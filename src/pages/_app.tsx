@@ -7,6 +7,7 @@ import { Container, Header } from '@/styles/pages/app'
 import Image from 'next/image'
 import { CartButton } from '@/components/cart-button'
 import { CartContextProvider } from '@/contexts/cart-context'
+import { useRouter } from 'next/router'
 
 const roboto = Roboto({
   weight: ['400', '700'],
@@ -16,6 +17,8 @@ const roboto = Roboto({
 globalStyles()
 
 export default function App({ Component, pageProps }: AppProps) {
+  const { pathname } = useRouter()
+
   return (
     <Container>
       <style jsx global>{`
@@ -25,9 +28,9 @@ export default function App({ Component, pageProps }: AppProps) {
       `}</style>
 
       <CartContextProvider>
-        <Header>
+        <Header isSuccessPage={pathname === '/success'}>
           <Image src={logoImg} alt="" />
-          <CartButton />
+          {pathname !== '/success' && <CartButton />}
         </Header>
 
         <Component {...pageProps} />
