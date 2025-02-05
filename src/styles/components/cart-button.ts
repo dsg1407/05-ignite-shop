@@ -115,7 +115,7 @@ export const CartResumeRow = styled('div', {
   },
 })
 
-export const CartList = styled('session', {
+export const CartList = styled('section', {
   marginTop: 24,
   display: 'flex',
   flexDirection: 'column',
